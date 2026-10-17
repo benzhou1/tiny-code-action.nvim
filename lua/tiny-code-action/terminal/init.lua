@@ -46,7 +46,10 @@ function M.colorize(buf, opts)
 
     vim.api.nvim_buf_set_lines(buf, 0, -1, false, {})
 
-    local term_chan = vim.api.nvim_open_term(buf, {})
+    local ok, term_chan = pcall(vim.api.nvim_open_term, buf, {})
+    if not ok then
+      return
+    end
 
     for _, line in ipairs(cleaned_lines) do
       vim.api.nvim_chan_send(term_chan, line .. "\r\n")
